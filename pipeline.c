@@ -1,0 +1,22 @@
+#include <instd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/type.h>
+char *message = "This is a message from parent!!!";
+int main(void){
+	pid_t childpid; /*variable to store the child's pid*/
+	char buf[1024];
+	int fd[2];
+	pipe(fd); /*create pipe*/
+	if (fork() !=0){ /*I am the parent*/
+		write(fd[1],message,strlen(message)+1);
+	}else{
+		printf("CHILD: I am the child process!\n");
+		printf("CHILD: Here is my PID: %d\n",getpid());
+		printf("CHILD: My parent's PID is : %d\n",getppid());
+		read(fd[0],buf,1024);
+		printf("I got the following message from my parent: %s\n", buf);
+	}
+
+}
